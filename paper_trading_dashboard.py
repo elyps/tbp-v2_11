@@ -48,21 +48,27 @@ def print_dashboard(db, start_capital):
     recent_trades = db.get_trades(status='closed', limit=5)
 
     # Header
-    print(f"{Colors.BOLD}{Colors.CYAN}╔════════════════════════════════════════════════════════════════════════╗{Colors.RESET}")
-    print(f"{Colors.BOLD}{Colors.CYAN}║           🚀 PAPER TRADING DASHBOARD (100€ Challenge) 🚀           ║{Colors.RESET}")
-    print(f"{Colors.BOLD}{Colors.CYAN}╚════════════════════════════════════════════════════════════════════════╝{Colors.RESET}")
+    print(f"{Colors.BOLD}{Colors.CYAN}╔════════════════════════════════════════════════════════╗{Colors.RESET}")
+    print(f"{Colors.BOLD}{Colors.CYAN}║     🚀 PAPER TRADING DASHBOARD (100€ Challenge) 🚀    ║{Colors.RESET}")
+    print(f"{Colors.BOLD}{Colors.CYAN}╚════════════════════════════════════════════════════════╝{Colors.RESET}")
     print(f"\n  {Colors.YELLOW}Letzte Aktualisierung:{Colors.RESET} {datetime.now().strftime('%H:%M:%S')}\n")
 
     # --- Performance ---
-    equity = portfolio.get('equity', start_capital) if portfolio else start_capital
-    pnl = equity - start_capital
-    pnl_percent = (pnl / start_capital) * 100 if start_capital > 0 else 0.0
+    if portfolio:
+        # Lese das tatsächliche Startkapital aus der Datenbank, falls vorhanden
+        db_start_capital = portfolio.get('initial_balance', start_capital)
+        equity = portfolio.get('equity', db_start_capital)
+    else:
+        db_start_capital = start_capital
+        equity = start_capital
 
+    pnl = equity - db_start_capital
+    pnl_percent = (pnl / db_start_capital) * 100 if db_start_capital > 0 else 0.0
     pnl_str = format_currency(pnl, color=True)
     pnl_percent_str = f"({pnl_percent:+.2f}%)"
 
     print(f"  {Colors.BOLD}PERFORMANCE{Colors.RESET}")
-    print(f"  ├─ Startkapital:      {format_currency(start_capital)}")
+    print(f"  ├─ Startkapital:      {format_currency(db_start_capital)}")
     print(f"  ├─ Aktuelles Kapital:   {Colors.BOLD}{format_currency(equity)}{Colors.RESET}")
     print(f"  └─ Gewinn / Verlust:    {pnl_str} {pnl_percent_str}")
     print()
