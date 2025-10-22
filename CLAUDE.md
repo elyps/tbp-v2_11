@@ -4,7 +4,14 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-An AI-powered cryptocurrency trading bot with Machine Learning integration for paper trading. The bot is currently configured for a 100€ paper trading challenge using ML-based strategies to generate buy/sell signals.
+An AI-powered cryptocurrency trading bot with **Continuous Learning** integration for paper trading. The bot automatically collects data from multiple APIs (CoinDesk, NewsAPI, CryptoCompare, Kraken) and continuously improves its ML model through automated retraining.
+
+**Key Features**:
+- 🧠 **AI Continuous Learning** - Automatic news & market data collection
+- 📰 **Multi-Source News** - CoinDesk, NewsAPI, CryptoCompare
+- 📊 **Auto-Retraining** - Scheduled model improvements every 24h
+- 📈 **Live Dashboard** - Real-time learning progress monitoring
+- 💰 **Paper Trading** - €100 challenge without real money risk
 
 **Language**: Python 3.9+, with German comments and documentation throughout the codebase.
 
@@ -69,7 +76,16 @@ pip install -r requirements.txt
 
 # Set up environment variables (copy from docs/env.example.txt)
 cp docs/env.example.txt .env
+
+# Add your API keys to .env
+nano .env  # Or use your preferred editor
 ```
+
+Required API Keys (in `.env`):
+- `KRAKEN_API_KEY` / `KRAKEN_API_SECRET` - For trading
+- `NEWSAPI_KEY` - News aggregation (optional but recommended)
+- `CRYPTOCOMPARE_KEY` - Crypto news (optional)
+- `COINDESK_API_KEY` - Crypto news (optional)
 
 ### Running the Bot
 ```bash
@@ -84,6 +100,9 @@ python run_paper_trading.py
 
 # Monitor with dashboard (run in separate terminal)
 python paper_trading_dashboard.py
+
+# Monitor AI Learning progress (run in third terminal)
+python ai_learning_dashboard.py
 ```
 
 ### Testing
