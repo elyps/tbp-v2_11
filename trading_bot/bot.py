@@ -880,7 +880,7 @@ def main():
     # 🧠 KI-gesteuerte Konfiguration: Priorisiert die Vorhersagen des trainierten Modells.
     config = {
         'settings': {
-            'initial_balance': 1000.0,  # 1000€ Startkapital für sinnvolle Positions-Größen
+            'initial_balance': 100.0,  # 1000€ Startkapital für sinnvolle Positions-Größen
             'risk_per_trade': 1.0,  # 1% Risiko pro Trade, da KI-Signale präziser sind
             'use_enhanced_pipeline': False,  # Legacy Pipeline nutzen, um die reine ML-Strategie zu verwenden
             'continuous_learning': True,  # Aktiviere kontinuierliches Lernen

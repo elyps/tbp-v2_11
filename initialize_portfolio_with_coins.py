@@ -32,7 +32,7 @@ def initialize_portfolio():
             'entry_time': datetime.utcnow().isoformat()
         },
         'XRP/EUR': {
-            'amount': 1000.0,  # 1000 XRP
+            'amount': 100.0,  # 1000 XRP
             'avg_price': 2.10,
             'total_cost': 2100.0,  # 1000 * 2.10
             'side': 'long',

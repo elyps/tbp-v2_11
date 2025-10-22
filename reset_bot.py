@@ -28,7 +28,7 @@ print("✅ Alle Positionen gelöscht")
 cursor.execute("DELETE FROM portfolio")
 cursor.execute("""
     INSERT INTO portfolio (balance, equity, total_trades, winning_trades, losing_trades, total_pnl)
-    VALUES (1000.0, 1000.0, 0, 0, 0, 0.0)
+    VALUES (100.0, 100.0, 0, 0, 0, 0.0)
 """)
 print("✅ Portfolio zurückgesetzt auf 1000€")
 

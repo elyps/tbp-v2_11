@@ -93,8 +93,8 @@ def get_portfolio_data(db) -> Dict:
     
     if not portfolio:
         portfolio = {
-            'balance': 1000.0,
-            'equity': 1000.0,
+            'balance': 100.0,
+            'equity': 100.0,
             'total_trades': 0,
             'winning_trades': 0,
             'losing_trades': 0,
@@ -143,12 +143,12 @@ def print_portfolio_overview(data: Dict):
     balance = portfolio['balance']
     equity = portfolio['equity']
     total_pnl = stats.get('total_pnl', 0.0)
-    pnl_percent = (total_pnl / 1000.0) * 100 if 1000.0 > 0 else 0.0
+    pnl_percent = (total_pnl / 100.0) * 100 if 100.0 > 0 else 0.0
     
     print(f"{Colors.BOLD}{Colors.BLUE}┌─ 💰 PORTFOLIO ÜBERSICHT ────────────────────────────────────────────────────────────────┐{Colors.RESET}")
     print(f"{Colors.BLUE}│{Colors.RESET}")
     print(f"{Colors.BLUE}│{Colors.RESET}  {Colors.BOLD}Kapital:{Colors.RESET}")
-    print(f"{Colors.BLUE}│{Colors.RESET}    Startkapital:          {format_currency(1000.0):>15}")
+    print(f"{Colors.BLUE}│{Colors.RESET}    Startkapital:          {format_currency(100.0):>15}")
     print(f"{Colors.BLUE}│{Colors.RESET}    Cash Balance:          {format_currency(balance, True):>25}")
     print(f"{Colors.BLUE}│{Colors.RESET}    Gesamt Equity:         {format_currency(equity, True):>25}")
     print(f"{Colors.BLUE}│{Colors.RESET}")

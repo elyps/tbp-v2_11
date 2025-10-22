@@ -13,7 +13,7 @@ API_KEYS = {
 # Standardwerte für das Trading
 DEFAULT_SETTINGS = {
     'timeframe': '1h',  # Standard-Zeitrahmen für die Analyse (1h = aktiver, 4h = mittel, 1d = langfristig)
-    'initial_balance': 1000.0,  # Startkapital in EUR (1000€ für bessere Position-Größen)
+    'initial_balance': 100.0,  # Startkapital in EUR (1000€ für bessere Position-Größen)
     'risk_per_trade': 1.0,  # Risiko pro Trade in % des Kontoguthabens
     'max_drawdown': 20.0,  # Maximaler Drawdown in %
     'trading_fee': 0.1,  # Handelsgebühr in %
