@@ -30,6 +30,10 @@ def run():
         print("   python train_comprehensive_model.py")
         sys.exit(1)
     
+    # Stelle sicher, dass die Datenbank existiert, bevor der Bot startet.
+    # get_database() initialisiert die DB und erstellt die Datei, falls sie fehlt.
+    get_database('trading_bot.db')
+    
     # Spezifische Konfiguration für das 100€-Experiment
     paper_trading_config = {
         'settings': {
