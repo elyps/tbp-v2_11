@@ -3,11 +3,20 @@ Konfigurationsdatei für den Trading-Bot
 """
 
 # API-Schlüssel für Kraken (sollten in Produktion in Umgebungsvariablen gespeichert werden)
+import os
+from dotenv import load_dotenv
+
+# Lade .env Datei
+load_dotenv()
+
 API_KEYS = {
     'kraken': {
-        'api_key': 'YOUR_KRAKEN_API_KEY',
-        'api_secret': 'YOUR_KRAKEN_API_SECRET'
+        'api_key': os.getenv('KRAKEN_API_KEY', 'YOUR_KRAKEN_API_KEY'),
+        'api_secret': os.getenv('KRAKEN_API_SECRET', 'YOUR_KRAKEN_API_SECRET')
     },
+    'newsapi_key': os.getenv('NEWSAPI_KEY', ''),
+    'cryptocompare_key': os.getenv('CRYPTOCOMPARE_KEY', ''),
+    'coindesk_key': os.getenv('COINDESK_API_KEY', ''),  # CoinDesk API für Krypto-News
 }
 
 # Standardwerte für das Trading
