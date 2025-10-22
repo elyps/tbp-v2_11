@@ -385,6 +385,10 @@ class DatabaseManager:
         cursor.execute("SELECT * FROM portfolio ORDER BY id DESC LIMIT 1")
         row = cursor.fetchone()
         return dict(row) if row else None
+
+    def get_latest_portfolio(self) -> Optional[Dict]:
+        """Alias für get_portfolio() - holt den letzten Portfolio-Status."""
+        return self.get_portfolio()
     
     # =========================================================================
     # POSITIONS METHODS

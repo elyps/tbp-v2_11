@@ -257,11 +257,101 @@ class TradingBot:
             self.use_enhanced_pipeline = False
     
     def _initialize_portfolio(self) -> Dict:
-        """Initialisiert das Portfolio mit dem Startkapital."""
+        """
+        Initialisiert das Portfolio.
+        Versucht zuerst, vorhandene Daten aus der DB zu laden.
+        Falls keine vorhanden sind, erstellt ein neues Portfolio.
+        """
+        # Versuche, Portfolio aus DB zu laden
+        try:
+            # Hole alle Trades aus DB
+            all_trades = self.db.get_trades(limit=10000)
+
+            # Hole offene Positionen aus DB
+            open_positions = self.db.get_all_positions()
+
+            # Wenn Trades oder Positionen existieren, stelle Portfolio wieder her
+            if all_trades or open_positions:
+                logger.info(f"📂 Stelle Portfolio aus DB wieder her ({len(all_trades)} Trades, {len(open_positions)} Positionen)")
+
+                # Hole letzten Portfolio-Status aus DB
+                latest_portfolio = self.db.get_latest_portfolio()
+
+                if latest_portfolio:
+                    balance = latest_portfolio.get('balance', self.config['settings']['initial_balance'])
+                    equity = latest_portfolio.get('equity', balance)
+                    initial_balance = self.config['settings']['initial_balance']
+                else:
+                    # Fallback: Berechne aus Trades
+                    initial_balance = self.config['settings']['initial_balance']
+                    balance = initial_balance
+                    equity = initial_balance
+
+                # Konvertiere Positionen von DB-Format zu Dict
+                positions = {}
+                for pos in open_positions:
+                    symbol = pos.get('symbol')
+                    positions[symbol] = {
+                        'amount': pos.get('amount', 0.0),
+                        'entry_price': pos.get('entry_price', 0.0),
+                        'current_price': pos.get('current_price', 0.0),
+                        'pnl': pos.get('pnl', 0.0),
+                        'pnl_percent': pos.get('pnl_percent', 0.0),
+                        'opened_at': pos.get('opened_at', datetime.utcnow().isoformat())
+                    }
+
+                # Konvertiere Trades von DB-Format
+                trades = []
+                for trade in all_trades:
+                    trades.append({
+                        'id': trade.get('trade_id', ''),
+                        'symbol': trade.get('symbol', ''),
+                        'action': trade.get('action', ''),
+                        'amount': trade.get('amount', 0.0),
+                        'price': trade.get('price', 0.0),
+                        'timestamp': trade.get('timestamp', ''),
+                        'status': trade.get('status', ''),
+                        'pnl': trade.get('pnl', 0.0),
+                    })
+
+                # Berechne Performance-Metriken aus Trades
+                winning_trades = sum(1 for t in all_trades if t.get('pnl', 0) > 0)
+                losing_trades = sum(1 for t in all_trades if t.get('pnl', 0) < 0)
+                total_trades = len(all_trades)
+                win_rate = (winning_trades / total_trades * 100) if total_trades > 0 else 0.0
+
+                logger.info(f"✓ Portfolio wiederhergestellt: Balance=€{balance:.2f}, Equity=€{equity:.2f}")
+                logger.info(f"  Offene Positionen: {len(positions)}")
+                logger.info(f"  Trades: {total_trades} (Win-Rate: {win_rate:.1f}%)")
+
+                return {
+                    'initial_balance': initial_balance,
+                    'balance': balance,
+                    'equity': equity,
+                    'positions': positions,
+                    'trades': trades,
+                    'performance': {
+                        'total_trades': total_trades,
+                        'winning_trades': winning_trades,
+                        'losing_trades': losing_trades,
+                        'win_rate': win_rate,
+                        'profit_factor': 0.0,  # TODO: Berechnen
+                        'max_drawdown': 0.0,   # TODO: Berechnen
+                        'sharpe_ratio': 0.0,   # TODO: Berechnen
+                    },
+                    'last_updated': datetime.utcnow().isoformat()
+                }
+
+        except Exception as e:
+            logger.warning(f"Konnte Portfolio nicht aus DB laden: {e}")
+            logger.info("Erstelle neues Portfolio...")
+
+        # Kein Portfolio in DB gefunden - erstelle neues
         initial_balance = self.config['settings']['initial_balance']
-        logger.info(f"Portfolio wird initialisiert mit: €{initial_balance}")
+        logger.info(f"🆕 Neues Portfolio wird erstellt mit: €{initial_balance}")
+
         return {
-            'initial_balance': initial_balance, # Hinzugefügt für Referenz
+            'initial_balance': initial_balance,
             'balance': initial_balance,
             'equity': initial_balance,
             'positions': {},
