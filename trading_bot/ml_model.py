@@ -10,6 +10,7 @@ import logging
 from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier
 from sklearn.preprocessing import StandardScaler
 import joblib
+import json
 import os
 
 # XGBoost und LightGBM Importe
