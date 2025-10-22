@@ -18,9 +18,17 @@ from .utils import setup_logging
 from .continuous_learning import TrainingDataCollector, ContinuousLearner
 from .database import get_database
 from .config import (
-    API_KEYS, DEFAULT_SETTINGS, INDICATORS, ML_SETTINGS, 
+    API_KEYS, DEFAULT_SETTINGS, INDICATORS, ML_SETTINGS,
     RISK_MANAGEMENT, STRATEGIES, LOGGING_CONFIG
 )
+
+# AI Learning Engine (Optional)
+try:
+    from .ai_learning_engine import AILearningEngine
+    AI_LEARNING_AVAILABLE = True
+except ImportError:
+    AI_LEARNING_AVAILABLE = False
+    logger.warning("AI Learning Engine nicht verfügbar")
 
 # Logger einrichten - MUSS vor den Imports stehen!
 setup_logging(LOGGING_CONFIG)
@@ -75,6 +83,18 @@ class TradingBot:
             self._initialize_continuous_learning()
         else:
             logger.info("Kontinuierliches Lernen deaktiviert")
+
+        # AI Learning Engine initialisieren (mit News & Market Data)
+        self.ai_learning_engine = None
+        if AI_LEARNING_AVAILABLE and self.config['settings'].get('enable_news_learning'):
+            try:
+                self.ai_learning_engine = AILearningEngine(
+                    bot=self,
+                    config={'api_keys': self.config['api_keys'], 'settings': self.config['settings']}
+                )
+                logger.info("✓ AI Learning Engine initialisiert")
+            except Exception as e:
+                logger.error(f"Fehler bei AI Learning Engine Init: {e}")
         
         # Speichere den initialen Zustand, damit Dashboards korrekte Werte haben
         self._save_portfolio_state()
@@ -265,6 +285,11 @@ class TradingBot:
 
         self.is_running = True
         logger.info(f"Starte Trading-Bot für Symbole: {', '.join(symbols)}")
+
+        # Starte AI Learning Engine im Hintergrund
+        if self.ai_learning_engine:
+            self.ai_learning_engine.start()
+            logger.info("🧠 AI Learning Engine gestartet (News + Marktdaten)")
 
         try:
             while self.is_running:
@@ -723,6 +748,12 @@ class TradingBot:
     def stop(self):
         """Stoppt den Trading-Bot sicher."""
         self.is_running = False
+
+        # Stoppe AI Learning Engine
+        if self.ai_learning_engine:
+            self.ai_learning_engine.stop()
+            logger.info("AI Learning Engine gestoppt")
+
         logger.info("Trading-Bot wurde gestoppt")
     
     def get_portfolio_summary(self) -> Dict:

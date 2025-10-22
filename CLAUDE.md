@@ -50,6 +50,16 @@ The bot uses a centralized SQLite database (`data/trading_bot.db`) for all persi
 
 **ContinuousLearner** (`trading_bot/continuous_learning.py`): Collects training data from live trades and retrains model periodically based on `min_samples_retrain` and `retrain_frequency_hours`.
 
+**AILearningEngine** (`trading_bot/ai_learning_engine.py`): Advanced continuous learning system that:
+- Collects news from CoinDesk, NewsAPI, CryptoCompare (every 4h)
+- Collects market data from Kraken (every hour)
+- Performs sentiment analysis on news
+- Creates training samples with technical indicators + news sentiment
+- Auto-retrains model every 24h
+- Tracks model performance and accuracy improvements
+
+See `docs/AI_CONTINUOUS_LEARNING.md` for detailed documentation.
+
 ## Common Commands
 
 ### Setup and Dependencies
