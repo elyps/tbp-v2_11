@@ -1,0 +1,38 @@
+#!/usr/bin/env python
+"""
+Startet den Trading-Bot im Paper Trading Modus mit 100€ Startkapital.
+"""
+
+import sys
+from pathlib import Path
+
+# Füge das Projektverzeichnis zum Python-Pfad hinzu
+project_root = Path(__file__).parent
+sys.path.insert(0, str(project_root))
+
+from trading_bot.bot import TradingBot
+from trading_bot.database import get_database
+
+def run():
+    """Konfiguriert und startet den Bot für das Paper Trading."""
+    
+    # Spezifische Konfiguration für das 100€-Experiment
+    paper_trading_config = {
+        'settings': {
+            'initial_balance': 100.0,
+            'paper_trading': True,
+            'use_enhanced_pipeline': False, # Einfache ML-Strategie für den Anfang
+        },
+        'strategies': {
+            'ml_based': {'enabled': True, 'min_confidence': 0.70},
+            'trend_following': {'enabled': False},
+            'mean_reversion': {'enabled': False},
+        }
+    }
+
+    # Bot initialisieren und starten
+    bot = TradingBot(config=paper_trading_config)
+    bot.run(symbols=['BTC/EUR', 'ETH/EUR'])
+
+if __name__ == "__main__":
+    run()
