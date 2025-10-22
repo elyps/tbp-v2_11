@@ -64,6 +64,9 @@ class TradingBot:
         self.config = self._load_config(config)
         self._initialize_components()
         self.is_running = False
+        
+        # Initialisiere Portfolio und speichere es sofort in der DB,
+        # um einen konsistenten Startzustand zu gewährleisten.
         self.portfolio = self._initialize_portfolio()
         
         # Kontinuierliches Lernsystem initialisieren
@@ -72,6 +75,9 @@ class TradingBot:
             self._initialize_continuous_learning()
         else:
             logger.info("Kontinuierliches Lernen deaktiviert")
+        
+        # Speichere den initialen Zustand, damit Dashboards korrekte Werte haben
+        self._save_portfolio_state()
         
         logger.info("Trading-Bot erfolgreich initialisiert")
     
