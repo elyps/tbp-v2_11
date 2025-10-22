@@ -98,18 +98,45 @@ class DataProvider:
             elif isinstance(since, datetime):
                 since = int(since.timestamp() * 1000)
             
-            logger.info(f"Hole historische Daten für {symbol} ({timeframe}), Limit: {limit}" + 
-                       (f" ab {pd.to_datetime(since/1000, unit='s')}" if since else ""))
+            logger.info(f"Starte Abruf historischer Daten für {symbol} ({timeframe}), Ziel-Limit: {limit}")
             
-            # OHLCV-Daten abrufen
-            ohlcv = exchange.fetch_ohlcv(symbol, timeframe, since=since, limit=limit)
+            all_ohlcv = []
+            fetch_since = since
+            remaining_limit = limit
             
-            if not ohlcv:
-                logger.warning(f"Keine Daten für {symbol} erhalten")
-                return None
+            while remaining_limit > 0:
+                # Die API hat oft ein eigenes, kleineres Limit (z.B. 1000)
+                fetch_limit = min(remaining_limit, 1000)
+                logger.debug(f"Hole Batch für {symbol}: Limit={fetch_limit}, Since={fetch_since}")
+                
+                ohlcv = exchange.fetch_ohlcv(symbol, timeframe, since=fetch_since, limit=fetch_limit)
+                
+                if not ohlcv:
+                    logger.info(f"Keine weiteren Daten für {symbol} verfügbar. Breche Schleife ab.")
+                    break
+                
+                all_ohlcv.extend(ohlcv)
+                
+                # Nächsten Startpunkt setzen
+                oldest_timestamp = ohlcv[0][0]
+                fetch_since = ohlcv[-1][0] + 1 # Nächster Abruf startet nach der letzten Kerze
+                
+                remaining_limit -= len(ohlcv)
+                
+                # Verhindere Endlosschleifen, wenn die API immer das Gleiche zurückgibt
+                if len(all_ohlcv) > 0 and all_ohlcv[-1][0] == oldest_timestamp:
+                    logger.warning("Kein Fortschritt beim Datenabruf, breche ab, um Endlosschleife zu vermeiden.")
+                    break
+                
+                time.sleep(exchange.rateLimit / 1000) # Respektiere Rate-Limit
             
             # In DataFrame umwandeln
-            df = pd.DataFrame(ohlcv, columns=['timestamp', 'open', 'high', 'low', 'close', 'volume'])
+            if not all_ohlcv:
+                logger.warning(f"Keine Daten für {symbol} erhalten.")
+                return None
+            
+            df = pd.DataFrame(all_ohlcv, columns=['timestamp', 'open', 'high', 'low', 'close', 'volume'])
+            df.drop_duplicates(subset=['timestamp'], inplace=True) # Duplikate entfernen
             df['timestamp'] = pd.to_datetime(df['timestamp'], unit='ms')
             df.set_index('timestamp', inplace=True)
             
