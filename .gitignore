@@ -1,11 +1,14 @@
-# SQLite Datenbanken
+# Data Directory
+data/
 *.db
 *.db-journal
 *.db-wal
 *.db-shm
-
-# Portfolio State
 portfolio_state.json
+
+# Test Results
+test_results/
+*.csv
 
 # Python
 __pycache__/

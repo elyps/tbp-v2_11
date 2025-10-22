@@ -14,17 +14,22 @@ import pandas as pd
 
 logger = logging.getLogger(__name__)
 
+# Standard-DB-Pfad (relativ zu Projekt-Root)
+DEFAULT_DB_PATH = Path(__file__).parent.parent / 'data' / 'trading_bot.db'
+
 
 class DatabaseManager:
     """Zentrale SQLite Datenbank für alle Bot-Daten."""
     
-    def __init__(self, db_path: str = "trading_bot.db"):
+    def __init__(self, db_path: str = None):
         """
         Initialisiert Database Manager.
-        
+
         Args:
-            db_path: Pfad zur SQLite Datenbank
+            db_path: Pfad zur SQLite Datenbank (default: data/trading_bot.db)
         """
+        if db_path is None:
+            db_path = str(DEFAULT_DB_PATH)
         self.db_path = db_path
         self.conn = None
         self._initialize_database()
@@ -641,8 +646,13 @@ class DatabaseManager:
 # Singleton Instance
 _db_instance = None
 
-def get_database(db_path: str = "trading_bot.db") -> DatabaseManager:
-    """Holt Singleton Database Instance."""
+def get_database(db_path: str = None) -> DatabaseManager:
+    """
+    Holt Singleton Database Instance.
+
+    Args:
+        db_path: Pfad zur Datenbank (default: data/trading_bot.db)
+    """
     global _db_instance
     if _db_instance is None:
         _db_instance = DatabaseManager(db_path)

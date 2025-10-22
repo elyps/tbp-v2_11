@@ -113,14 +113,14 @@ def print_dashboard(db, start_capital):
 def main():
     """Hauptfunktion für das Dashboard."""
     start_capital = 100.0
-    db_path = 'trading_bot.db'
+    db_path = Path(__file__).parent / 'data' / 'trading_bot.db'
 
-    if not Path(db_path).exists():
-        print(f"Datenbank '{db_path}' nicht gefunden.")
+    if not db_path.exists():
+        print(f"Datenbank nicht gefunden: {db_path}")
         print("Bitte starte zuerst den Bot mit 'python run_paper_trading.py'.")
         sys.exit(1)
 
-    db = get_database(db_path)
+    db = get_database(str(db_path))
     print("Verbinde mit Datenbank... Dashboard startet.")
     time.sleep(1)
 

@@ -31,8 +31,8 @@ def run():
         sys.exit(1)
     
     # Stelle sicher, dass die Datenbank existiert, bevor der Bot startet.
-    # get_database() initialisiert die DB und erstellt die Datei, falls sie fehlt.
-    get_database('trading_bot.db')
+    # get_database() verwendet automatisch data/trading_bot.db
+    get_database()
     
     # Spezifische Konfiguration für das 100€-Experiment
     paper_trading_config = {

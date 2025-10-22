@@ -6,7 +6,7 @@ Ein KI-gestützter Trading-Bot für Kryptowährungen mit Machine Learning Integr
 
 ### 1. Portfolio auf 100€ zurücksetzen
 ```bash
-python reset_portfolio.py
+python helper_scripts/reset_portfolio.py
 ```
 
 ### 2. Bot starten
@@ -24,10 +24,15 @@ python paper_trading_dashboard.py
 ### Haupt-Skripte (Root)
 - **`run_paper_trading.py`** - Startet den Bot im Paper Trading Modus (100€)
 - **`paper_trading_dashboard.py`** - Live-Dashboard für Performance-Monitoring
-- **`reset_portfolio.py`** - Setzt Portfolio auf 100€ zurück
 - **`train_comprehensive_model.py`** - Trainiert das ML-Modell
 - **`main.py`** - Haupt-Einstiegspunkt (alternatives Start-Skript)
-- **`reset_bot.py`** - Vollständiger Bot-Reset
+
+### Daten (`data/`)
+- `trading_bot.db` - SQLite Datenbank (automatisch erstellt)
+- `portfolio_state.json` - Portfolio-Status (Legacy)
+
+### Test-Ergebnisse (`test_results/`)
+- CSV-Dateien mit Backtest- und Test-Ergebnissen
 
 ### Module (`trading_bot/`)
 - **`bot.py`** - Haupt-Bot-Logik
@@ -49,15 +54,22 @@ Companion Codex Pipeline mit erweiterten Features
 - `live/` - Live Trading & Broker
 
 ### Hilfsskripte (`helper_scripts/`)
-Debug, Test und Wartungs-Skripte:
+Debug, Test, Wartung und Reset-Skripte:
+- **Reset**: `reset_portfolio.py`, `reset_bot.py`, `reset_database.py`
 - **Debug**: `debug_*.py`, `check_*.py`
 - **Tests**: `test_*.py`
 - **Datenbank**: `migrate_*.py`, `view_*.py`, `fix_database.py`
 - **Monitoring**: `monitor_*.py`
 - **Server**: `deploy-to-server.sh`, `update_bot.sh`, `manage_bot.sh`
+- Siehe [helper_scripts/README.md](helper_scripts/README.md) für Details
 
 ### Dokumentation (`docs/`)
 - `env.example.txt` - Beispiel-Umgebungsvariablen
+
+### Weitere Ordner
+- `logs/` - Log-Dateien
+- `models/` - Trainierte ML-Modelle
+- `news_data/` - News & Sentiment-Daten
 
 ## 🔧 Konfiguration
 
@@ -99,7 +111,7 @@ CRYPTOCOMPARE_API_KEY=your_key
 
 ## 🗄️ Datenbank
 
-SQLite-Datenbank (`trading_bot.db`) mit folgenden Tabellen:
+SQLite-Datenbank (`data/trading_bot.db`) mit folgenden Tabellen:
 - `portfolio` - Portfolio-Status
 - `trades` - Trade-Historie
 - `positions` - Offene Positionen
@@ -140,13 +152,13 @@ python helper_scripts/test_init_only.py
 
 ### Portfolio zurücksetzen
 ```bash
-python reset_portfolio.py
+python helper_scripts/reset_portfolio.py
 ```
 Setzt:
 - Portfolio auf 100€
 - Löscht offene Positionen
 - Löscht offene Trades
-- Aktualisiert `portfolio_state.json`
+- Aktualisiert `data/portfolio_state.json`
 
 ### Modell neu trainieren
 ```bash
@@ -174,10 +186,10 @@ Logs werden in `logs/trading_bot.log` gespeichert.
    python train_comprehensive_model.py
    ```
 
-3. **Nicht in Git committen**:
-   - `trading_bot.db` (Datenbank)
-   - `portfolio_state.json` (Portfolio-State)
-   - `*.log` (Logs)
+3. **Nicht in Git committen** (automatisch durch `.gitignore`):
+   - `data/` (Datenbank und Portfolio-State)
+   - `test_results/` (CSV-Dateien)
+   - `logs/` (Log-Dateien)
    - `__pycache__/` (Python Cache)
 
 ## 🤝 Contributing

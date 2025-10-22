@@ -8,14 +8,15 @@ import json
 from pathlib import Path
 from datetime import datetime, UTC
 
-# Add trading_bot to path
-sys.path.insert(0, str(Path(__file__).parent))
+# Add project root to path
+sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from trading_bot.database import get_database
 
 def main():
     """Setzt das Portfolio auf 100€ zurück."""
-    db = get_database('trading_bot.db')
+    # Verwendet automatisch data/trading_bot.db
+    db = get_database()
 
     # Hole aktuelles Portfolio
     portfolio = db.get_portfolio()
@@ -64,7 +65,7 @@ def main():
     db.save_portfolio(new_portfolio)
 
     # Aktualisiere auch portfolio_state.json falls vorhanden
-    portfolio_state_file = Path('portfolio_state.json')
+    portfolio_state_file = Path(__file__).parent.parent / 'data' / 'portfolio_state.json'
     if portfolio_state_file.exists():
         print("Aktualisiere portfolio_state.json...")
         portfolio_state = {
