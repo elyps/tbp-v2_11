@@ -141,8 +141,15 @@ class TechnicalIndicators:
             try:
                 vortex_period = self.config.get('vortex', {}).get('window', 14)
                 vortex = ta.vortex(high=df['high'], low=df['low'], close=df['close'], length=vortex_period)
-                df['vortex_pos'] = vortex[f'VIp_{vortex_period}']
-                df['vortex_neg'] = vortex[f'VIm_{vortex_period}']
+                # Die Spaltennamen in pandas-ta haben sich geändert
+                pos_col_name = f'VTXP_{vortex_period}'
+                neg_col_name = f'VTXM_{vortex_period}'
+                if pos_col_name in vortex.columns and neg_col_name in vortex.columns:
+                    df['vortex_pos'] = vortex[pos_col_name]
+                    df['vortex_neg'] = vortex[neg_col_name]
+                else: # Fallback für ältere Versionen
+                    df['vortex_pos'] = vortex[f'VIp_{vortex_period}']
+                    df['vortex_neg'] = vortex[f'VIm_{vortex_period}']
                 logger.debug(f"Vortex Indicator berechnet (Period: {vortex_period})")
             except Exception as e:
                 logger.warning(f"Fehler bei Vortex-Berechnung: {e}")
