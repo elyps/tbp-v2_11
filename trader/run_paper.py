@@ -43,7 +43,7 @@ def main():
     logger.info("=" * 80)
     
     # Initialize components
-    broker = PaperBroker(initial_balance=10000.0)
+    broker = PaperBroker(initial_balance=100.0)
     risk_params = RiskParams(
         max_pos_per_asset=cfg.risk.max_pos_per_asset,
         max_gross=cfg.risk.max_gross,
@@ -141,7 +141,7 @@ def main():
     logger.info("=" * 80)
     
     final_equity = broker.get_equity()
-    total_return = (final_equity / 10000.0 - 1) * 100
+    total_return = (final_equity / 100.0 - 1) * 100
     
     logger.info(f"Initial Balance:  $10,000.00")
     logger.info(f"Final Equity:     ${final_equity:,.2f}")

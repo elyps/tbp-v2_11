@@ -30,8 +30,8 @@ def load_portfolio(db) -> Dict:
     if not portfolio:
         # Fallback: Standard-Portfolio
         return {
-            'balance': 10000.0,
-            'equity': 10000.0,
+            'balance': 100.0,
+            'equity': 100.0,
             'positions': {},
             'trades': [],
             'performance': {
@@ -133,13 +133,13 @@ def print_dashboard(portfolio: Dict):
     
     balance = portfolio.get('balance', 0)
     equity = portfolio.get('equity', 0)
-    profit = equity - 10000.0  # Startkapital war 10000
-    profit_pct = (profit / 10000.0) * 100 if profit != 0 else 0
+    profit = equity - 100.0  # Startkapital war 10000
+    profit_pct = (profit / 100.0) * 100 if profit != 0 else 0
     
     profit_symbol = "📈" if profit >= 0 else "📉"
     profit_color = "+" if profit >= 0 else ""
     
-    print(f"│  Startkapital:     {format_currency(10000.0):>20}                          │")
+    print(f"│  Startkapital:     {format_currency(100.0):>20}                          │")
     print(f"│  Aktuelles Equity: {format_currency(equity):>20}                          │")
     print(f"│  Cash Balance:     {format_currency(balance):>20}                          │")
     print(f"│  {profit_symbol} Gewinn/Verlust: {profit_color}{format_currency(profit):>20} ({format_percentage(profit_pct):>8})       │")

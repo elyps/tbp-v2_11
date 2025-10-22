@@ -21,7 +21,7 @@ def simulate(
     risk: RiskParams,
     fee_bps: int = 2,
     slip_bps: int = 6,
-    initial_equity: float = 10000.0,
+    initial_equity: float = 100.0,
 ) -> pd.DataFrame:
     """Simulate trading with stops, trailing, and risk controls.
     

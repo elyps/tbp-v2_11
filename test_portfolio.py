@@ -19,7 +19,7 @@ def main():
     # Bot erstellen mit Testkapital
     config = {
         'settings': {
-            'initial_balance': 10000.0,
+            'initial_balance': 100.0,
             'paper_trading': True,
         },
         'strategies': {

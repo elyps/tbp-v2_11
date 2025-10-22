@@ -77,7 +77,7 @@ class IBroker(ABC):
 class PaperBroker(IBroker):
     """Paper trading broker (simulation)."""
     
-    def __init__(self, initial_balance: float = 10000.0) -> None:
+    def __init__(self, initial_balance: float = 100.0) -> None:
         self.balance = initial_balance
         self.equity = initial_balance
         self.positions: Dict[str, Position] = {}

@@ -33,7 +33,7 @@ Die neue **Companion Codex Trading Pipeline** wurde erfolgreich in deinen besteh
 config = {
     'settings': {
         'use_enhanced_pipeline': True,  # Aktiviert Companion Codex
-        'initial_balance': 10000.0,
+        'initial_balance': 100.0,
         # ... weitere Settings
     }
 }

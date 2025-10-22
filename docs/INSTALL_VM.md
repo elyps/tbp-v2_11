@@ -70,7 +70,7 @@ env
 KRAKEN_API_KEY=your_actual_kraken_api_key
 KRAKEN_API_SECRET=your_actual_kraken_api_secret
 BOT_MODE=paper_trading
-INITIAL_BALANCE=10000.0
+INITIAL_BALANCE=100.0
 RISK_PER_TRADE=1.0
 LOG_LEVEL=INFO
 Drücken Sie CTRL+O zum Speichern und CTRL+X zum Beenden von nano.

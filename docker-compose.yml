@@ -18,7 +18,7 @@ services:
 
       # ============= BOT CONFIGURATION =============
       - PAPER_TRADING=${PAPER_TRADING:-true}
-      - INITIAL_BALANCE=${INITIAL_BALANCE:-10000.0}
+      - INITIAL_BALANCE=${INITIAL_BALANCE:-100.0}
       - RISK_PER_TRADE=${RISK_PER_TRADE:-1.0}
       - MAX_POSITION_SIZE=${MAX_POSITION_SIZE:-30.0}
       

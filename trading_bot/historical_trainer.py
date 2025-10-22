@@ -311,7 +311,7 @@ class HistoricalTrainer:
         start_date: str,
         end_date: str,
         timeframe: str = '15m', # Backtest auf dem gleichen Timeframe wie das Training
-        initial_balance: float = 10000.0
+        initial_balance: float = 100.0
     ) -> Dict:
         """
         Backtesting mit historischen Daten und trainiertem Modell.

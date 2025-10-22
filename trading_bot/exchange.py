@@ -192,9 +192,9 @@ class ExchangeInterface:
         if self.paper_trading:
             return {
                 'USDT': {
-                    'free': 10000.0,
+                    'free': 100.0,
                     'used': 0.0,
-                    'total': 10000.0
+                    'total': 100.0
                 }
             }
         

@@ -12,7 +12,7 @@ def initialize_portfolio():
     """Erstellt ein Portfolio mit Startpositionen."""
     
     # Definiere Startkapital und Positionen
-    initial_balance = 10000.0  # €10,000 Startkapital
+    initial_balance = 100.0  # €10,000 Startkapital
     
     # Beispiel: Kaufe zu aktuellen Preisen
     # Verteile das Kapital: 30% BTC, 30% ETH, 30% XRP, 10% Cash Reserve
