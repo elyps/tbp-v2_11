@@ -110,9 +110,6 @@ class HistoricalTrainer:
                 if use_news and self.news_provider:
                     df_indicators = self._add_news_features(df_indicators, symbol)
 
-                # Füge On-Chain-Features hinzu (als Platzhalter für historisches Training)
-                df_indicators = self._add_onchain_features(df_indicators)
-                
                 # Generiere Labels basierend auf zukünftigen Preisen
                 labels = self._generate_labels(
                     df_indicators,
@@ -308,36 +305,6 @@ class HistoricalTrainer:
         
         return df
 
-    def _add_onchain_features(self, df: pd.DataFrame) -> pd.DataFrame:
-        """
-        Fügt Platzhalter für On-Chain- und Futures-Daten hinzu.
-        Im Live-Betrieb würden hier echte Daten von einem Provider geladen.
-        """
-        onchain_features = {
-            # Netzwerk-Aktivität
-            'active_addresses': 0.0,
-            'transaction_count': 0.0,
-            'transaction_volume': 0.0,
-            # Börsen-Flows
-            'exchange_inflow': 0.0,
-            'exchange_outflow': 0.0,
-            'exchange_netflow': 0.0,
-            # Wal-Aktivität
-            'whale_inflow': 0.0,
-            'whale_outflow': 0.0,
-            # Futures-Markt
-            'futures_open_interest': 0.0,
-            'futures_funding_rate': 0.0,
-            'futures_long_liquidations': 0.0,
-            'futures_short_liquidations': 0.0,
-            # Bewertungsmetriken
-            'nvt_signal': 0.0, 'sopr': 1.0, 'mvrv_z_score': 0.0
-        }
-        for feature, value in onchain_features.items():
-            df[feature] = value
-        logger.debug("Platzhalter für On-Chain-Features hinzugefügt.")
-        return df
-    
     def backtest_on_historical_data(
         self,
         symbol: str,
@@ -381,9 +348,6 @@ class HistoricalTrainer:
         
         # Indikatoren berechnen
         df_indicators = self.indicators.calculate_all(df)
-        
-        # On-Chain Features hinzufügen (Platzhalter)
-        df_indicators = self._add_onchain_features(df_indicators)
         
         # Simulation
         balance = initial_balance

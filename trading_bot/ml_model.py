@@ -268,12 +268,6 @@ class MLModel:
             'rsi_lag_1', 'rsi_lag_3', 'rsi_lag_5',
             'macd_hist_lag_1', 'macd_hist_lag_3',
             'adx_lag_3', 'volume_ratio_lag_3',
-            # On-Chain & Futures Features (NEU)
-            'active_addresses', 'transaction_count', 'transaction_volume',
-            'exchange_inflow', 'exchange_outflow', 'exchange_netflow',
-            'whale_inflow', 'whale_outflow',
-            'futures_open_interest', 'futures_funding_rate', 'futures_long_liquidations',
-            'futures_short_liquidations', 'nvt_signal', 'sopr', 'mvrv_z_score'
         ]
 
     def _create_features_from_indicators(self, df: pd.DataFrame) -> pd.DataFrame:
