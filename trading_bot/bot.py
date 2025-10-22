@@ -232,9 +232,11 @@ class TradingBot:
     
     def _initialize_portfolio(self) -> Dict:
         """Initialisiert das Portfolio mit dem Startkapital."""
+        initial_balance = self.config['settings']['initial_balance']
         return {
-            'balance': self.config['settings']['initial_balance'],
-            'equity': self.config['settings']['initial_balance'],
+            'initial_balance': initial_balance, # Hinzugefügt für Referenz
+            'balance': initial_balance,
+            'equity': initial_balance,
             'positions': {},
             'trades': [],
             'performance': {
