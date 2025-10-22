@@ -43,6 +43,7 @@ class MLModel:
         self.model = None
         self.scaler = StandardScaler()
         self.is_trained = False
+        self.feature_names_on_fit = []
         self.model_path = settings.get('model_path', 'models/')
         
         # Erstelle Modell-Verzeichnis
@@ -57,11 +58,22 @@ class MLModel:
         """Lädt ein gespeichertes Modell, falls vorhanden."""
         model_file = os.path.join(self.model_path, 'trading_model.pkl')
         scaler_file = os.path.join(self.model_path, 'scaler.pkl')
+        features_file = os.path.join(self.model_path, 'feature_names.json')
         
         try:
-            if os.path.exists(model_file) and os.path.exists(scaler_file):
+            if os.path.exists(model_file) and os.path.exists(scaler_file) and os.path.exists(features_file):
                 self.model = joblib.load(model_file)
                 self.scaler = joblib.load(scaler_file)
+                with open(features_file, 'r') as f:
+                    self.feature_names_on_fit = json.load(f)
+                
+                # Überprüfung der Features
+                current_features = self._get_feature_names()
+                if set(self.feature_names_on_fit) != set(current_features):
+                    logger.warning("Geladenes Modell wurde mit anderen Features trainiert! Es wird empfohlen, das Modell neu zu trainieren.")
+                    # Optional: Training erzwingen, indem is_trained auf False gesetzt wird
+                    # self.is_trained = False
+                    # return
                 self.is_trained = True
                 logger.info("Gespeichertes Modell erfolgreich geladen")
         except Exception as e:
@@ -77,6 +89,9 @@ class MLModel:
         """
         try:
             logger.info(f"Starte Training mit {len(X)} Samples...")
+            
+            # Speichere die Feature-Namen, die beim Training verwendet wurden
+            self.feature_names_on_fit = list(X.columns)
             
             # Daten skalieren
             X_scaled = self.scaler.fit_transform(X)
@@ -162,9 +177,14 @@ class MLModel:
         try:
             model_file = os.path.join(self.model_path, 'trading_model.pkl')
             scaler_file = os.path.join(self.model_path, 'scaler.pkl')
+            features_file = os.path.join(self.model_path, 'feature_names.json')
             
             joblib.dump(self.model, model_file)
             joblib.dump(self.scaler, scaler_file)
+            
+            # Speichere Feature-Namen
+            with open(features_file, 'w') as f:
+                json.dump(self.feature_names_on_fit, f)
             
             logger.info("Modell erfolgreich gespeichert")
         except Exception as e:
