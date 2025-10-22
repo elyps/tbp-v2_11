@@ -426,11 +426,11 @@ class DatabaseManager:
     # TRAINING DATA METHODS
     # =========================================================================
     
-    def save_training_sample(self, trade_id: str, symbol: str, features: Dict, 
+    def save_training_sample(self, trade_id: str, symbol: str, features: Dict,
                             label: Optional[int] = None, pnl: Optional[float] = None):
         """Speichert Training Sample für Continuous Learning."""
         cursor = self.conn.cursor()
-        
+
         cursor.execute("""
             INSERT INTO training_data (trade_id, symbol, features, label, pnl, timestamp)
             VALUES (?, ?, ?, ?, ?, ?)
@@ -442,9 +442,27 @@ class DatabaseManager:
             pnl,
             datetime.utcnow().isoformat()
         ))
-        
+
         self.conn.commit()
         logger.debug(f"Training sample gespeichert: {trade_id}")
+
+    def save_training_data(self, data: Dict):
+        """Speichert generisches Training Data Sample."""
+        cursor = self.conn.cursor()
+
+        cursor.execute("""
+            INSERT INTO training_data (trade_id, symbol, features, label, pnl, timestamp)
+            VALUES (?, ?, ?, ?, ?, ?)
+        """, (
+            data.get('trade_id', str(uuid.uuid4())),
+            data.get('symbol', ''),
+            data.get('features', '{}'),
+            data.get('label'),
+            data.get('future_return'),
+            data.get('timestamp', datetime.utcnow().isoformat())
+        ))
+
+        self.conn.commit()
     
     def get_training_data(self, symbol: Optional[str] = None, limit: int = 1000) -> pd.DataFrame:
         """Holt Training Data als DataFrame."""
@@ -563,15 +581,33 @@ class DatabaseManager:
         
         self.conn.commit()
     
-    def get_recent_news(self, symbol: str, limit: int = 50) -> List[Dict]:
-        """Holt aktuelle News für Symbol."""
+    def get_recent_news(self, symbol: str, limit: int = 50, hours: int = None) -> List[Dict]:
+        """
+        Holt aktuelle News für Symbol.
+
+        Args:
+            symbol: Trading Symbol
+            limit: Max. Anzahl News
+            hours: Optional - nur News der letzten X Stunden
+        """
         cursor = self.conn.cursor()
-        cursor.execute("""
-            SELECT * FROM news 
-            WHERE symbol = ? 
-            ORDER BY published_at DESC 
-            LIMIT ?
-        """, (symbol, limit))
+
+        if hours:
+            cutoff = (datetime.now(UTC) - timedelta(hours=hours)).isoformat()
+            cursor.execute("""
+                SELECT * FROM news
+                WHERE symbol = ? AND published_at >= ?
+                ORDER BY published_at DESC
+                LIMIT ?
+            """, (symbol, cutoff, limit))
+        else:
+            cursor.execute("""
+                SELECT * FROM news
+                WHERE symbol = ?
+                ORDER BY published_at DESC
+                LIMIT ?
+            """, (symbol, limit))
+
         return [dict(row) for row in cursor.fetchall()]
     
     # =========================================================================
