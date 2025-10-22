@@ -48,9 +48,9 @@ def print_dashboard(db, start_capital):
     recent_trades = db.get_trades(status='closed', limit=5)
 
     # Header
-    print(f"{Colors.BOLD}{Colors.CYAN}╔════════════════════════════════════════════════════════╗{Colors.RESET}")
-    print(f"{Colors.BOLD}{Colors.CYAN}║     🚀 PAPER TRADING DASHBOARD (100€ Challenge) 🚀    ║{Colors.RESET}")
-    print(f"{Colors.BOLD}{Colors.CYAN}╚════════════════════════════════════════════════════════╝{Colors.RESET}")
+    print(f"{Colors.BOLD}{Colors.CYAN}╔═══════════════════════════════════════════════════╗{Colors.RESET}")
+    print(f"{Colors.BOLD}{Colors.CYAN}║  🚀 PAPER TRADING DASHBOARD (100€ Challenge) 🚀  ║{Colors.RESET}")
+    print(f"{Colors.BOLD}{Colors.CYAN}╚═══════════════════════════════════════════════════╝{Colors.RESET}")
     print(f"\n  {Colors.YELLOW}Letzte Aktualisierung:{Colors.RESET} {datetime.now().strftime('%H:%M:%S')}\n")
 
     # --- Performance ---
