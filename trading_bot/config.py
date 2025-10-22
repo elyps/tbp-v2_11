@@ -23,6 +23,12 @@ DEFAULT_SETTINGS = {
     'continuous_learning': True,
     'min_samples_retrain': 100,
     'retrain_frequency_hours': 24,
+    # AI Learning Settings
+    'enable_news_learning': True,  # Lernt aus News-Sentiment
+    'enable_market_learning': True,  # Lernt aus Marktdaten
+    'news_fetch_interval_hours': 4,  # Hole News alle 4 Stunden
+    'market_data_fetch_interval_hours': 1,  # Hole Marktdaten jede Stunde
+    'auto_retrain': True,  # Automatisches Retraining
 }
 
 # Standard-Indikatoren und ihre Parameter
