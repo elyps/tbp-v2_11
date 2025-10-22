@@ -239,6 +239,7 @@ class TradingBot:
     def _initialize_portfolio(self) -> Dict:
         """Initialisiert das Portfolio mit dem Startkapital."""
         initial_balance = self.config['settings']['initial_balance']
+        logger.info(f"Portfolio wird initialisiert mit: €{initial_balance}")
         return {
             'initial_balance': initial_balance, # Hinzugefügt für Referenz
             'balance': initial_balance,
@@ -690,6 +691,7 @@ class TradingBot:
     def _save_portfolio_state(self):
         """Speichert den aktuellen Portfolio-Status in die SQLite Datenbank."""
         try:
+            logger.info(f"Speichere Portfolio: Balance=€{self.portfolio['balance']}, Equity=€{self.portfolio['equity']}")
             self.db.save_portfolio(self.portfolio)
             logger.debug("Portfolio-Status in Datenbank gespeichert")
         except Exception as e:

@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 """
-Setzt das Portfolio auf 100€ zurück.
+Setzt das Portfolio auf 100€ zurück und löscht alle Positionen und Trades.
 """
 
 import sys
@@ -17,15 +17,33 @@ def main():
 
     # Hole aktuelles Portfolio
     portfolio = db.get_portfolio()
+    positions = db.get_all_positions()
+    open_trades = db.get_open_trades()
 
     if portfolio:
         print(f"Aktuelles Portfolio:")
         print(f"  Balance: €{portfolio['balance']:.2f}")
         print(f"  Equity:  €{portfolio['equity']:.2f}")
+        print(f"  Offene Positionen: {len(positions)}")
+        print(f"  Offene Trades: {len(open_trades)}")
         print()
     else:
         print("Kein Portfolio in der Datenbank gefunden.")
         print()
+
+    # Lösche alle offenen Positionen
+    if positions:
+        print(f"Lösche {len(positions)} offene Positionen...")
+        cursor = db.conn.cursor()
+        cursor.execute("DELETE FROM positions")
+        db.conn.commit()
+
+    # Lösche alle offenen Trades (optional: alle Trades löschen)
+    if open_trades:
+        print(f"Lösche {len(open_trades)} offene Trades...")
+        cursor = db.conn.cursor()
+        cursor.execute("DELETE FROM trades WHERE status = 'open'")
+        db.conn.commit()
 
     # Setze Portfolio auf 100€ zurück
     print("Setze Portfolio auf 100€ zurück...")
@@ -45,10 +63,12 @@ def main():
 
     # Bestätige
     portfolio = db.get_portfolio()
+    positions = db.get_all_positions()
     print()
     print(f"Neues Portfolio:")
     print(f"  Balance: €{portfolio['balance']:.2f}")
     print(f"  Equity:  €{portfolio['equity']:.2f}")
+    print(f"  Offene Positionen: {len(positions)}")
     print()
     print("✓ Portfolio erfolgreich zurückgesetzt!")
 
