@@ -55,20 +55,20 @@ def print_dashboard(db, start_capital):
 
     # --- Performance ---
     if portfolio:
-        # Lese das tatsächliche Startkapital aus der Datenbank, falls vorhanden
-        db_start_capital = portfolio.get('initial_balance', start_capital)
-        equity = portfolio.get('equity', db_start_capital)
+        # Lese das aktuelle Kapital aus der DB, aber nutze das Skript-Kapital als Fallback
+        # Wenn die DB leer war und der Bot neu startet, kann der Wert fehlen.
+        # Wir verwenden daher das im Skript definierte Kapital als verlässliche Quelle.
+        equity = portfolio.get('equity', start_capital)
     else:
-        db_start_capital = start_capital
         equity = start_capital
 
-    pnl = equity - db_start_capital
-    pnl_percent = (pnl / db_start_capital) * 100 if db_start_capital > 0 else 0.0
+    pnl = equity - start_capital
+    pnl_percent = (pnl / start_capital) * 100 if start_capital > 0 else 0.0
     pnl_str = format_currency(pnl, color=True)
     pnl_percent_str = f"({pnl_percent:+.2f}%)"
 
     print(f"  {Colors.BOLD}PERFORMANCE{Colors.RESET}")
-    print(f"  ├─ Startkapital:      {format_currency(db_start_capital)}")
+    print(f"  ├─ Startkapital:      {format_currency(start_capital)}")
     print(f"  ├─ Aktuelles Kapital:   {Colors.BOLD}{format_currency(equity)}{Colors.RESET}")
     print(f"  └─ Gewinn / Verlust:    {pnl_str} {pnl_percent_str}")
     print()
