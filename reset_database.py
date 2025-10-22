@@ -36,11 +36,7 @@ def reset_database(db_path='trading_bot.db'):
         
         # Setze Portfolio zurück
         cursor.execute("DELETE FROM portfolio")
-        cursor.execute("""
-            INSERT INTO portfolio (balance, equity, total_trades, winning_trades, losing_trades, total_pnl, max_drawdown, sharpe_ratio)
-            VALUES (1000.0, 1000.0, 0, 0, 0, 0.0, 0.0, 0.0)
-        """)
-        print(f"  ✓ Portfolio zurückgesetzt (Balance: €1000)")
+        print(f"  ✓ Portfolio-Tabelle geleert")
         
         # Lösche Training Data (optional)
         response = input("\nTraining-Daten auch löschen? (ja/nein): ")
