@@ -360,9 +360,20 @@ class NewsProvider:
         
         return features
     
-    def save_news_to_history(self, symbol: str, news_dir: str = 'news_data'):
+    def save_news_to_history(self, symbol: str, news_dir: str = None):
         """Speichert News-Artikel für historische Analyse."""
         try:
+            # Verwende zentrale Pfad-Konfiguration
+            if news_dir is None:
+                try:
+                    import sys
+                    from pathlib import Path
+                    sys.path.insert(0, str(Path(__file__).parent.parent))
+                    from config_paths import NEWS_DATA_DIR
+                    news_dir = str(NEWS_DATA_DIR)
+                except ImportError:
+                    news_dir = 'news_data'
+
             os.makedirs(news_dir, exist_ok=True)
             
             news = self.get_crypto_news(symbol, limit=50)

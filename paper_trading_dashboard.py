@@ -13,6 +13,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent))
 
 from trading_bot.database import get_database
+from config_paths import DB_PATH
 
 # ANSI Farben
 class Colors:
@@ -113,7 +114,9 @@ def print_dashboard(db, start_capital):
 def main():
     """Hauptfunktion für das Dashboard."""
     start_capital = 100.0
-    db_path = Path(__file__).parent / 'data' / 'trading_bot.db'
+
+    # Verwende zentrale DB-Pfad-Konfiguration
+    db_path = DB_PATH
 
     if not db_path.exists():
         print(f"Datenbank nicht gefunden: {db_path}")

@@ -45,8 +45,17 @@ class MLModel:
         self.scaler = StandardScaler()
         self.is_trained = False
         self.feature_names_on_fit = []
-        self.model_path = settings.get('model_path', 'models/')
-        
+
+        # Verwende zentrale Pfad-Konfiguration
+        try:
+            import sys
+            from pathlib import Path
+            sys.path.insert(0, str(Path(__file__).parent.parent))
+            from config_paths import MODELS_DIR
+            self.model_path = str(MODELS_DIR)
+        except ImportError:
+            self.model_path = settings.get('model_path', 'models/')
+
         # Erstelle Modell-Verzeichnis
         os.makedirs(self.model_path, exist_ok=True)
         

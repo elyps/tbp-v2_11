@@ -14,8 +14,16 @@ import pandas as pd
 
 logger = logging.getLogger(__name__)
 
-# Standard-DB-Pfad (relativ zu Projekt-Root)
-DEFAULT_DB_PATH = Path(__file__).parent.parent / 'data' / 'trading_bot.db'
+# Import zentrale Pfad-Konfiguration
+try:
+    import sys
+    from pathlib import Path as PathLib
+    sys.path.insert(0, str(PathLib(__file__).parent.parent))
+    from config_paths import DB_PATH
+    DEFAULT_DB_PATH = DB_PATH
+except ImportError:
+    # Fallback falls config_paths nicht verfügbar
+    DEFAULT_DB_PATH = Path(__file__).parent.parent / 'data' / 'trading_bot.db'
 
 
 class DatabaseManager:

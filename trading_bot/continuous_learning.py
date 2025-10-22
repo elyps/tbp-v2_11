@@ -216,8 +216,16 @@ class ContinuousLearner:
         self.min_samples_for_retrain = config.get('min_samples_for_retrain', 100)
         self.retrain_frequency = config.get('retrain_frequency_hours', 24)
         self.last_retrain_time = datetime.utcnow()
-        
-        self.model_versions_dir = config.get('model_versions_dir', 'models/versions')
+
+        # Verwende zentrale Pfad-Konfiguration für model_versions_dir
+        try:
+            import sys
+            sys.path.insert(0, str(Path(__file__).parent.parent))
+            from config_paths import MODELS_DIR
+            self.model_versions_dir = str(MODELS_DIR / 'versions')
+        except ImportError:
+            self.model_versions_dir = config.get('model_versions_dir', 'models/versions')
+
         os.makedirs(self.model_versions_dir, exist_ok=True)
         
         self.performance_file = os.path.join(self.model_versions_dir, 'performance_history.json')
