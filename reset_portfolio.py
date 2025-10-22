@@ -6,7 +6,7 @@ Setzt das Portfolio auf 100€ zurück und löscht alle Positionen und Trades.
 import sys
 import json
 from pathlib import Path
-from datetime import datetime
+from datetime import datetime, UTC
 
 # Add trading_bot to path
 sys.path.insert(0, str(Path(__file__).parent))
@@ -81,7 +81,7 @@ def main():
                 'max_drawdown': 0.0,
                 'sharpe_ratio': 0.0
             },
-            'last_updated': datetime.utcnow().isoformat()
+            'last_updated': datetime.now(UTC).isoformat()
         }
         with open(portfolio_state_file, 'w') as f:
             json.dump(portfolio_state, f, indent=2)
