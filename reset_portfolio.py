@@ -4,7 +4,9 @@ Setzt das Portfolio auf 100€ zurück und löscht alle Positionen und Trades.
 """
 
 import sys
+import json
 from pathlib import Path
+from datetime import datetime
 
 # Add trading_bot to path
 sys.path.insert(0, str(Path(__file__).parent))
@@ -60,6 +62,30 @@ def main():
     }
 
     db.save_portfolio(new_portfolio)
+
+    # Aktualisiere auch portfolio_state.json falls vorhanden
+    portfolio_state_file = Path('portfolio_state.json')
+    if portfolio_state_file.exists():
+        print("Aktualisiere portfolio_state.json...")
+        portfolio_state = {
+            'balance': 100.0,
+            'equity': 100.0,
+            'positions': {},
+            'trades': [],
+            'performance': {
+                'total_trades': 0,
+                'winning_trades': 0,
+                'losing_trades': 0,
+                'win_rate': 0.0,
+                'profit_factor': 0.0,
+                'max_drawdown': 0.0,
+                'sharpe_ratio': 0.0
+            },
+            'last_updated': datetime.utcnow().isoformat()
+        }
+        with open(portfolio_state_file, 'w') as f:
+            json.dump(portfolio_state, f, indent=2)
+        print("✓ portfolio_state.json aktualisiert")
 
     # Bestätige
     portfolio = db.get_portfolio()
