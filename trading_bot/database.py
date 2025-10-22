@@ -7,10 +7,17 @@ import sqlite3
 import json
 import logging
 import uuid
-from datetime import datetime
+from datetime import datetime, timedelta
 from pathlib import Path
 from typing import Dict, List, Optional, Any
 import pandas as pd
+
+# UTC import with fallback for older Python versions
+try:
+    from datetime import UTC
+except ImportError:
+    from datetime import timezone
+    UTC = timezone.utc
 
 logger = logging.getLogger(__name__)
 

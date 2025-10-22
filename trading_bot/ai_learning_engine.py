@@ -7,12 +7,19 @@ import logging
 import time
 import json
 import requests
-from datetime import datetime, timedelta, UTC
+from datetime import datetime, timedelta
 from typing import Dict, List, Optional
 from pathlib import Path
 import pandas as pd
 import numpy as np
 from threading import Thread, Event
+
+# UTC import with fallback for older Python versions
+try:
+    from datetime import UTC
+except ImportError:
+    from datetime import timezone
+    UTC = timezone.utc
 
 logger = logging.getLogger(__name__)
 
