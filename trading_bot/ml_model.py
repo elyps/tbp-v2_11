@@ -348,7 +348,7 @@ class MLModel:
         
         # Ersetze unendliche Werte und fülle NaNs, die durch Berechnungen entstanden sind
         features_df.replace([np.inf, -np.inf], np.nan, inplace=True)
-        features_df.fillna(0, inplace=True)
+        features_df = features_df.fillna(0)
         
         return features_df
 
