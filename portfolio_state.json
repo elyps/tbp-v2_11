@@ -1,6 +1,6 @@
 {
-  "balance": 10000.0,
-  "equity": 10000.0,
+  "balance": 100.0,
+  "equity": 100.0,
   "positions": {},
   "trades": [],
   "performance": {
@@ -12,5 +12,5 @@
     "max_drawdown": 0.0,
     "sharpe_ratio": 0.0
   },
-  "last_updated": "2025-10-20T06:54:28.625937"
+  "last_updated": "2025-10-22T10:42:37.673298"
 }
