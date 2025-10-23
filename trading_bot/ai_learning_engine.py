@@ -147,10 +147,12 @@ class AILearningEngine:
         news_interval = self.config['settings'].get('news_fetch_interval_hours', 4) * 3600
         market_interval = self.config['settings'].get('market_data_fetch_interval_hours', 1) * 3600
         retrain_interval = self.config['settings'].get('retrain_frequency_hours', 24) * 3600
+        historical_import_interval = self.config['settings'].get('historical_import_interval_hours', 168) * 3600  # 7 Tage
 
         last_news = time.time()
         last_market = time.time()
         last_retrain = time.time()
+        last_historical_import = time.time() - historical_import_interval  # Sofort beim Start
 
         while not self.stop_event.is_set():
             try:
@@ -179,6 +181,14 @@ class AILearningEngine:
                     self._auto_retrain()
                     last_retrain = current_time
                     self.stats['last_retrain'] = datetime.now(UTC).isoformat()
+
+                # Historischer Daten-Import (wöchentlich)
+                if self.config['settings'].get('enable_historical_import', True) and \
+                   (current_time - last_historical_import) >= historical_import_interval:
+                    logger.info("📚 Starte historischen Daten-Import...")
+                    self._import_historical_data()
+                    last_historical_import = current_time
+                    self.stats['last_historical_import'] = datetime.now(UTC).isoformat()
 
                 self._save_stats()
 
@@ -454,6 +464,38 @@ class AILearningEngine:
             pass
         except:
             pass
+
+    def _import_historical_data(self):
+        """Importiert historische Daten von CoinDesk und Kraken"""
+        try:
+            from pathlib import Path
+            import sys
+            sys.path.insert(0, str(Path(__file__).parent.parent))
+
+            # Importiere CoinDeskHistoricalImporter
+            from helper_scripts.import_coindesk_history import CoinDeskHistoricalImporter
+
+            importer = CoinDeskHistoricalImporter(api_key=self.config['api_keys'].get('coindesk_key'))
+
+            # Importiere 7 Tage historische Daten
+            logger.info("📚 Importiere historische Marktdaten (7 Tage)...")
+
+            # Nur Marktdaten, keine News (News werden separat gesammelt)
+            samples_created = importer.create_training_samples_from_history(
+                symbol='BTC/USD',
+                days_back=7
+            )
+
+            logger.info(f"✓ {samples_created} historische Training-Samples importiert")
+
+            # Trigger Auto-Retrain wenn genug Samples
+            training_samples = self.db.get_training_data(limit=100000)
+            if len(training_samples) >= 100:
+                logger.info("🧠 Genug Samples vorhanden - triggere Auto-Retrain...")
+                self._auto_retrain()
+
+        except Exception as e:
+            logger.error(f"Fehler beim historischen Import: {e}", exc_info=True)
 
     def get_stats(self) -> Dict:
         """Gibt aktuelle Learning-Stats zurück"""

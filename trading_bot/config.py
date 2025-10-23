@@ -30,6 +30,8 @@ DEFAULT_SETTINGS = {
     'paper_trading': True,  # Paper Trading aktiviert (kein echtes Geld)
     'use_enhanced_pipeline': True,  # Verwende neue Companion Codex Pipeline
     'continuous_learning': True,
+    'enable_historical_import': True,  # Historische Daten importieren
+    'historical_import_interval_hours': 168,  # Wöchentlich (7 Tage)
     'min_samples_retrain': 100,
     'retrain_frequency_hours': 24,
     # AI Learning Settings
