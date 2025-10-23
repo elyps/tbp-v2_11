@@ -2,6 +2,7 @@
 """
 Startet den Trading-Bot im Paper Trading Modus mit 100€ Startkapital.
 """
+import argparse
 
 import sys
 from pathlib import Path
@@ -21,15 +22,17 @@ def check_model_exists() -> bool:
     return model_path.exists()
 
 
-def run():
+def main():
     """Konfiguriert und startet den Bot für das Paper Trading."""
     
+    parser = argparse.ArgumentParser(description="Startet den Trading-Bot im Paper Trading Modus.")
+    # In Zukunft könnten hier weitere Argumente hinzugefügt werden, z.B. --initial-balance
+    args = parser.parse_args()
+
     if not check_model_exists():
-        print("❌ FEHLER: KI-Modell nicht gefunden!")
-        print("Bitte trainieren Sie zuerst das Modell mit einem der folgenden Befehle:")
-        print("   python train_comprehensive_model.py")
+        print("❌ FEHLER: KI-Modell nicht gefunden!\nBitte trainieren Sie zuerst das Modell, z.B. mit 'python train_comprehensive_model.py'.", file=sys.stderr)
         sys.exit(1)
-    
+
     # Stelle sicher, dass die Datenbank existiert, bevor der Bot startet.
     # get_database() verwendet automatisch data/trading_bot.db
     get_database()
@@ -53,4 +56,4 @@ def run():
     bot.run(symbols=['BTC/EUR', 'ETH/EUR'])
 
 if __name__ == "__main__":
-    run()
+    main()
